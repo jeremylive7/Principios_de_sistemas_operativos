@@ -308,7 +308,7 @@ def FIFO():
     parametro_largo = 3
 
     contador_global = 0
-    lista_contadores = [0]
+    lista_contadores = []
 
     #Caso primero, se llena la lista de resultado
     for n in parametros_entrada:
@@ -323,7 +323,7 @@ def FIFO():
         if lista_resultado == []:
             lista_resultado.append(n)
             es_vacia = True
-            lista_contadores[0] = 1
+            lista_contadores.append(0)
 
         #Si el numero a insertar es igual entonces no se hace nada
         if es_vacia == False:
@@ -392,12 +392,112 @@ def FIFO():
 #
 def SecondChance():
     lista_resultado = []
+    parametros_entrada = [2,3,2,1,5,2,4,5,3,2,5,2]
     parametro_largo = 3
-    parametros_entrada = [1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6]
 
-    #Recorro parametros de entrada
+    contador_global = 0
+    lista_contadores = []
+    lista_second_chance = []
+
+    #Caso primero, se llena la lista de resultado
     for n in parametros_entrada:
+        
+        print("\nPagina:")
         print(n)
 
+        es_igual = False
+        es_vacia = False
+
+        #Caso cuando es vacia la lista
+        if lista_resultado == []:
+            lista_resultado.append(n)
+            es_vacia = True
+            lista_contadores.append(0)
+            lista_second_chance.append(0)
+
+        #Si el numero a insertar es igual entonces no se hace nada
+        if es_vacia == False:
+
+            contador3 = 0
+
+            for m in lista_resultado:
+                
+                if m == n:
+                    es_igual = True
+                    print("Hubo un second chance. Se actualiza a uno.")
+                    lista_second_chance[contador3] = 1
+
+                contador3 += 1
+
+        #Caso en el que el numero es diferente.
+        if es_igual == False and \
+            es_vacia == False:
+
+            largo_lista = len(lista_resultado)
+
+            #Esta vacia alguna casilla?
+            if largo_lista < parametro_largo:
+                lista_resultado.append(n)
+                lista_contadores.append(0)
+                lista_second_chance.append(0)
+
+            else:
+
+                el_mas_viejo = 0
+                contador2 = 0
+                
+                #Revisa cual es la pagina mas vieja
+                for k in lista_contadores:
+
+                    #Caso cuando estan en el indice cero
+                    if contador2 == 0 and \
+                        lista_second_chance[contador2] == 0:
+                        el_mas_viejo = k
+                        contador_global = contador2
+                    else:
+                        #Compara para sacar el mas viejo
+                        #Para los que tengan second chance, los omite
+                        if el_mas_viejo < k and \
+                            lista_second_chance[contador2] == 0:
+                            el_mas_viejo = k
+                            contador_global = contador2
+                        
+                        #Actualiza el second chance
+                        if el_mas_viejo < k and \
+                            lista_second_chance[contador2] == 1:
+                            print("Se salvo el que tiene second chance. Se actualiza a cero.")
+                            lista_second_chance[contador2] = 0
+
+                    contador2 += 1
+
+                lista_resultado[contador_global] = n
+                lista_contadores[contador_global] = 0
+
+
+            #Coloco el indice global en el campo correspondiente
+            if contador_global < parametro_largo-1:
+                contador_global += 1
+            else:
+                contador_global = 0
+
+        largo_lista_contadores = len(lista_contadores)
+
+        #Aumenta contadores en general
+        for j in range(0,largo_lista_contadores):
+            numero = lista_contadores[j]
+            lista_contadores[j] = numero + 1
+
+
+        #Imprimo resultado
+        print("Lista second chance:")
+        print(lista_second_chance)
+
+        print("Lista contadores:")
+        print(lista_contadores)
+
+        print("Lista de resultado:")
+        print(lista_resultado)
+
+
 #Compilo
-#SecondChance()
+SecondChance()
