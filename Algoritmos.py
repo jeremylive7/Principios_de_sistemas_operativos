@@ -77,58 +77,6 @@ def LRU():
 #Compilo
 #LRU()
 
-#
-def FIFO():
-    lista_resultado = []
-    parametros_entrada = [7,0,1,2,0,3,0,4,2,3,0,3,2,1,2]
-    parametro_largo = 3
-
-    contador_global = 0
-
-
-    #Caso primero, se llena la lista de resultado
-    for n in parametros_entrada:
-        
-        print("\nPagina:")
-        print(n)
-
-        es_igual = False
-    
-        #Si el numero a insertar es igual entonces no se hace nada
-        for m in lista_resultado:
-            
-            if m == n:
-                es_igual = True
-
-        #Caso en el que el numero es diferente.
-        if es_igual == False:
-
-            #Esta vacia alguna casilla?
-            if len(lista_resultado) < parametro_largo:
-                lista_resultado.append(n)
-            else:
-                lista_resultado[contador_global] = n
-
-            print("Indice")
-            print(contador_global)
-
-            #Coloco el indice global en el campo correspondiente
-            if contador_global < parametro_largo-1:
-                contador_global += 1
-            else:
-                contador_global = 0
-        else:
-            print("Indice")
-            print(contador_global)
-
-        #Imprimo resultado
-
-        print("Lista de resultado:")
-        print(lista_resultado)
-
-#Compilo
-#FIFO()
-
 #Algoritmo de remplazo de la frecuencia menos usada
 def LFU():
     lista_resultado = []
@@ -354,6 +302,94 @@ def MRU():
 #MRU()
 
 #
+def FIFO():
+    lista_resultado = []
+    parametros_entrada = [3,2,1,3,4,1,6,2,4,3,4,2,1,4,5,2,1,3,4]
+    parametro_largo = 3
+
+    contador_global = 0
+    lista_contadores = [0]
+
+    #Caso primero, se llena la lista de resultado
+    for n in parametros_entrada:
+        
+        print("\nPagina:")
+        print(n)
+
+        es_igual = False
+        es_vacia = False
+
+        #Caso cuando es vacia la lista
+        if lista_resultado == []:
+            lista_resultado.append(n)
+            es_vacia = True
+            lista_contadores[0] = 1
+
+        #Si el numero a insertar es igual entonces no se hace nada
+        if es_vacia == False:
+            for m in lista_resultado:
+                
+                if m == n:
+                    es_igual = True
+
+        #Caso en el que el numero es diferente.
+        if es_igual == False and \
+            es_vacia == False:
+
+            largo_lista = len(lista_resultado)
+
+            #Esta vacia alguna casilla?
+            if largo_lista < parametro_largo:
+                lista_resultado.append(n)
+                lista_contadores.append(0)
+            else:
+
+                el_mas_viejo = 0
+                contador2 = 0
+                
+                #Revisa cual es la pagina mas vieja
+                for k in lista_contadores:
+
+                    #Caso cuando estan en el indice cero
+                    if contador2 == 0:
+                        el_mas_viejo = k
+                        contador_global = contador2
+                    else:
+                        #Compara para sacar el mas viejo
+                        if el_mas_viejo < k:
+                            el_mas_viejo = k
+                            contador_global = contador2
+
+                    contador2 += 1
+
+                lista_resultado[contador_global] = n
+                lista_contadores[contador_global] = 0
+
+
+            #Coloco el indice global en el campo correspondiente
+            if contador_global < parametro_largo-1:
+                contador_global += 1
+            else:
+                contador_global = 0
+
+        largo_lista_contadores = len(lista_contadores)
+
+        #Aumenta contadores en general
+        for j in range(0,largo_lista_contadores):
+            numero = lista_contadores[j]
+            lista_contadores[j] = numero + 1
+
+        #Imprimo resultado
+        print("Lista contadores:")
+        print(lista_contadores)
+
+        print("Lista de resultado:")
+        print(lista_resultado)
+
+#Compilo
+#FIFO()
+
+#
 def SecondChance():
     lista_resultado = []
     parametro_largo = 3
@@ -364,4 +400,4 @@ def SecondChance():
         print(n)
 
 #Compilo
-SecondChance()
+#SecondChance()
