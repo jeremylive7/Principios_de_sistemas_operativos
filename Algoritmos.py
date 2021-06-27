@@ -65,7 +65,10 @@ def LRU():
             contador2 += 1
             
         #Imprimo corrida
-        print("\nLista de resultado: ")
+        print("\nPagina:")
+        print(n)
+
+        print("Lista de resultado: ")
         print(lista_result)
 
         print("Lista de contadores: ")
@@ -86,6 +89,9 @@ def FIFO():
     #Caso primero, se llena la lista de resultado
     for n in parametros_entrada:
         
+        print("\nPagina:")
+        print(n)
+
         es_igual = False
     
         #Si el numero a insertar es igual entonces no se hace nada
@@ -103,7 +109,7 @@ def FIFO():
             else:
                 lista_resultado[contador_global] = n
 
-            print("\nIndice")
+            print("Indice")
             print(contador_global)
 
             #Coloco el indice global en el campo correspondiente
@@ -112,10 +118,11 @@ def FIFO():
             else:
                 contador_global = 0
         else:
-            print("\nIndice")
+            print("Indice")
             print(contador_global)
 
         #Imprimo resultado
+
         print("Lista de resultado:")
         print(lista_resultado)
 
@@ -259,7 +266,12 @@ def LFU():
             
             lista_resultado = lista_resultado_temp
 
-        print("\nNumero seleccionado a remplazar")
+        #Resultados
+        
+        print("\nPagina:")
+        print(n)
+
+        print("Numero seleccionado a remplazar")
         print(numero_seleccionado)
                 
         print("Lista de resultados:")
@@ -275,11 +287,81 @@ def LFU():
 #
 def MRU():
     lista_resultado = []
-    parametro_largo = 3
-    parametros_entrada = [7,0,1,2,0,3,0,4,2,3,0,3,2,1,2]
+    parametro_largo = 4
+    parametros_entrada = [1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6]
 
+    indice_global = 0
+    esta_llena = False
+
+    #Recorro paramentros de entrada
+    for n in parametros_entrada:
+
+        print("\nPagina:")
+        print(n)
+
+        es_vacia = False
+
+        #Caso cuando la lista esta vacia
+        if lista_resultado == []:
+            lista_resultado.append(n)
+            es_vacia = True
+
+        #Caso cuando el numero ya esta
+        if es_vacia == False:
+
+            es_igual = False
+            contador1 = 0
+
+            #Recorro lista_resultado para saber si esta el numero
+            for m in lista_resultado:
+                
+                if m == n:
+                    es_igual = True
+                    indice_global = contador1
+                    print("X")
+
+                contador1 += 1
+
+        #Caso cuando esta llena la lista
+        #Se sustituye donde se encuentre el indice
+        if esta_llena == True:
+            lista_resultado[indice_global] = n
+
+        #Caso cuando hay casillas disponibles
+        #El numero no esta en la lista
+        if es_vacia == False and \
+            es_igual == False and \
+            len(lista_resultado) < parametro_largo:
+
+            lista_resultado.append(n) 
+            indice_global += 1
+
+        #Si esta llena la lista se prende la bandera   
+        if len(lista_resultado) == parametro_largo:
+            esta_llena = True
+        
+        #Resultados
+
+        print("Indice global:")
+        print(indice_global)
+        
+        print("Lista de resultado:")
+        print(lista_resultado)
+
+
+
+#Compilo
+#MRU()
+
+#
+def SecondChance():
+    lista_resultado = []
+    parametro_largo = 3
+    parametros_entrada = [1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6]
+
+    #Recorro parametros de entrada
     for n in parametros_entrada:
         print(n)
 
 #Compilo
-MRU()
+SecondChance()
