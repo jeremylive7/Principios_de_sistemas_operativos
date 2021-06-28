@@ -108,8 +108,6 @@ def LRU(parametros_entrada, parametro_largo):
     pf = 0
     ph = 0
     
-    #lista_contadora_roja = []
-
     es_diferente = False
     contador_parametros = 0
  
@@ -128,22 +126,14 @@ def LRU(parametros_entrada, parametro_largo):
 
             #Es el parametro a insertar es igual al dato de la lista
             if n == m:
-                #lista_contadora_roja[contador1] = 1
                 es_diferente = False
                 print("X")
                 ph += 1
-            #else:
-                #Se suma uno a los demas numeros
-                #lista_contadora_roja[contador1] += 1
 
             contador1 += 1
             
         #Caso tercero, cuando entra un numero diferente
         if es_diferente == True and contador2 >= parametro_largo:
-
-            contador3 = 0
-            mas_grande = 0
-            indice_encontrado = 0
 
             bandera_encontre_menos_usado = False
             contador_menos_usado = contador_parametros-1
@@ -157,9 +147,6 @@ def LRU(parametros_entrada, parametro_largo):
                 numero_a_revisar = parametros_entrada[contador_menos_usado]
                 bandera_esta_o_no = -1
                 bandera_esta = False
-
-                contador_cuantos_llevo = 0
-                
 
                 #Caso cuando es vacia la lista de cuantos llevo
                 if cont_list_cuantos_llevo == []:
@@ -199,37 +186,18 @@ def LRU(parametros_entrada, parametro_largo):
 
                 contador4 += 1
 
-            #Fijarse en que lleva mas tiempo
-            # for y in lista_contadora_roja:
-
-            #     #Es mayor, se sustitulle
-            #     if mas_grande < y:
-            #         mas_grande = y
-            #         indice_encontrado = contador3
-
-            #     contador3 += 1
-
-            #Sustituyo el numero que a estado mas tiempo
-            #lista_result[indice_encontrado] = n   
-            #lista_contadora_roja[indice_encontrado] = 1
-
             pf += 1
 
         #Caso primero, cuando se llena la memoria
         if  es_diferente == True and contador2 < parametro_largo:
             lista_result.append(n)
-            #lista_contadora_roja.append(1)
             contador2 += 1
             pf += 1
             
 
         contador_parametros += 1
 
-        #Imprimo corrida
-
-        #print("Lista de contadores: ")
-        #print(lista_contadora_roja)
-        
+        #Imprimo corrida       
         print("Lista de resultado: ")
         print(lista_result)
 
@@ -324,9 +292,24 @@ def FIFO(parametros_entrada, parametro_largo):
             numero = lista_contadores[j]
             lista_contadores[j] = numero + 1
 
+        #Obtengo primera pagina en entrar
+        indice = 0
+        contador3 = 0
+        mayor = -1
+
+        for o in lista_contadores:
+
+            if mayor < o:
+                mayor = o
+                indice = contador3
+            
+            contador3 += 1
+        
+        primera_pagina = lista_resultado[indice]
+
         #Imprimo resultado
-        print("Lista contadores:")
-        print(lista_contadores)
+        print("Primera pagina en entrar:")
+        print(primera_pagina)
 
         print("Lista de resultado:")
         print(lista_resultado)
@@ -443,13 +426,30 @@ def SecondChance(parametros_entrada, parametro_largo):
             numero = lista_contadores[j]
             lista_contadores[j] = numero + 1
 
+        #Obtengo primera pagina en entrar
+        indice = 0
+        contador3 = 0
+        mayor = -1
+
+        for o in lista_contadores:
+
+            if mayor < o:
+                mayor = o
+                indice = contador3
+            
+            contador3 += 1
+        
+        primera_pagina = lista_resultado[indice]
 
         #Imprimo resultado
         print("Lista second chance:")
         print(lista_second_chance)
 
-        print("Lista contadores:")
+        print("Lista de paginas mas antiguas:")
         print(lista_contadores)
+
+        print("Primera pagina en entrar:")
+        print(primera_pagina)
 
         print("Lista de resultado:")
         print(lista_resultado)
@@ -630,17 +630,17 @@ def LFU(parametros_entrada, parametro_largo):
 
 ###############################################################################################################
 
-# print("############################################## MRU ############################################################")
-# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 MRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-# MRU([7,0,1,2,0,3,0,4,2,3,0,3,1,2,0,7,0,1], 3)
-# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo2 MRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-# MRU([1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6], 4)
+print("############################################## MRU ############################################################")
+print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 MRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+MRU([7,0,1,2,0,3,0,4,2,3,0,3,1,2,0,7,0,1], 3)
+print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo2 MRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+MRU([1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6], 4)
 
-print("############################################# LRU #############################################################")
-print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 LRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-LRU([1,2,3,4,1,2,5,1,2,3,4,5], 4)
-print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo2 LRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-LRU([7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1], 3)
+# print("############################################# LRU #############################################################")
+# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 LRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+# LRU([1,2,3,4,1,2,5,1,2,3,4,5], 4)
+# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo2 LRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+# LRU([7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1], 3)
 
 # print("############################################# FIFO ############################################################")
 # print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 FIFO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
