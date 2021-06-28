@@ -9,10 +9,10 @@
 #
 def MRU(parametros_entrada, parametro_largo):
     lista_resultado = []
-    indice_global = 0
     esta_llena = False
     pf = 0
     ph = 0
+    contador_parametros = 0
 
     #Recorro paramentros de entrada
     for n in parametros_entrada:
@@ -21,6 +21,7 @@ def MRU(parametros_entrada, parametro_largo):
         print(n)
 
         es_vacia = False
+        pagina_mas_reciente = -1
 
         #Caso cuando la lista esta vacia
         if lista_resultado == []:
@@ -32,25 +33,38 @@ def MRU(parametros_entrada, parametro_largo):
         if es_vacia == False:
 
             es_igual = False
-            contador1 = 0
 
             #Recorro lista_resultado para saber si esta el numero
             for m in lista_resultado:
                 
                 if m == n:
                     es_igual = True
-                    indice_global = contador1
                     print("X")
                     ph += 1
 
-                contador1 += 1
-
         #Caso cuando esta llena la lista
         #Se sustituye donde se encuentre el indice
-        if esta_llena == True:
-            lista_resultado[indice_global] = n
-            if es_igual == False:
-                pf += 1
+        if esta_llena == True and \
+            es_igual == False:
+            
+            pf += 1
+            indice_insertar = -1
+            contador2 = 0
+
+            #Obtengo la pagina mas reciente
+            pagina_mas_reciente = parametros_entrada[contador_parametros-1]
+
+            #obtengo el frame donde debo insertar
+            for h in lista_resultado:
+
+                if h == pagina_mas_reciente:
+                    indice_insertar = contador2
+
+                    #Inserto la pagina
+                    lista_resultado[indice_insertar] = n
+
+                contador2 += 1
+
 
         #Caso cuando hay casillas disponibles
         #El numero no esta en la lista
@@ -58,18 +72,19 @@ def MRU(parametros_entrada, parametro_largo):
             es_igual == False and \
             len(lista_resultado) < parametro_largo:
 
-            lista_resultado.append(n) 
-            indice_global += 1
+            lista_resultado.append(n)
             pf += 1
 
         #Si esta llena la lista se prende la bandera   
         if len(lista_resultado) == parametro_largo:
             esta_llena = True
         
+        contador_parametros += 1
+
         #Resultados
 
-        print("Indice global:")
-        print(indice_global)
+        print("Pagina mas reciente:")
+        print(pagina_mas_reciente)
         
         print("Lista de resultado:")
         print(lista_resultado)
@@ -93,11 +108,11 @@ def LRU(parametros_entrada, parametro_largo):
     pf = 0
     ph = 0
     
-    lista_contadora_roja = []
+    #lista_contadora_roja = []
 
     es_diferente = False
-
-
+    contador_parametros = 0
+ 
     #Recorre el arreglo de numeros
     for n in parametros_entrada:
 
@@ -113,13 +128,13 @@ def LRU(parametros_entrada, parametro_largo):
 
             #Es el parametro a insertar es igual al dato de la lista
             if n == m:
-                lista_contadora_roja[contador1] = 1
+                #lista_contadora_roja[contador1] = 1
                 es_diferente = False
                 print("X")
                 ph += 1
-            else:
+            #else:
                 #Se suma uno a los demas numeros
-                lista_contadora_roja[contador1] += 1
+                #lista_contadora_roja[contador1] += 1
 
             contador1 += 1
             
@@ -130,34 +145,91 @@ def LRU(parametros_entrada, parametro_largo):
             mas_grande = 0
             indice_encontrado = 0
 
+            bandera_encontre_menos_usado = False
+            contador_menos_usado = contador_parametros-1
+            pagina_menos_usada = 0
+            cont_list_cuantos_llevo = []
+
+            #Cual a sido el menos usado?
+            while contador_menos_usado >= 0 and \
+                bandera_encontre_menos_usado == False:
+
+                numero_a_revisar = parametros_entrada[contador_menos_usado]
+                bandera_esta_o_no = -1
+                bandera_esta = False
+
+                contador_cuantos_llevo = 0
+                
+
+                #Caso cuando es vacia la lista de cuantos llevo
+                if cont_list_cuantos_llevo == []:
+                    cont_list_cuantos_llevo.append(numero_a_revisar)
+                else:
+                    #Verifico si ese numero ya lo lei o no
+                    for k in cont_list_cuantos_llevo:
+
+                        if k != numero_a_revisar:
+                            bandera_esta_o_no = 0
+                        else:
+                            bandera_esta_o_no = 1
+                            bandera_esta = True
+
+                #llevo cuenta
+                if bandera_esta_o_no == 0 and \
+                    bandera_esta == False:
+                    cont_list_cuantos_llevo.append(numero_a_revisar)
+                    pagina_menos_usada = numero_a_revisar
+
+                #Verifico si ya llegue a la cuenta
+                if len(cont_list_cuantos_llevo) == parametro_largo:
+                    bandera_encontre_menos_usado = True
+
+                #Me corro un espacio a la izquierda.
+                contador_menos_usado -= 1
+
+            contador4 = 0
+
+            #Ya teniendo el menos usado, inserto en su debido indice al resultado
+            for g in lista_result:
+
+                if g == pagina_menos_usada:
+                    lista_result[contador4] = n
+                    print("La pagina menos usada es:")
+                    print(pagina_menos_usada)
+
+                contador4 += 1
+
             #Fijarse en que lleva mas tiempo
-            for y in lista_contadora_roja:
+            # for y in lista_contadora_roja:
 
-                #Es mayor, se sustitulle
-                if mas_grande < y:
-                    mas_grande = y
-                    indice_encontrado = contador3
+            #     #Es mayor, se sustitulle
+            #     if mas_grande < y:
+            #         mas_grande = y
+            #         indice_encontrado = contador3
 
-                contador3 += 1
+            #     contador3 += 1
 
             #Sustituyo el numero que a estado mas tiempo
-            lista_result[indice_encontrado] = n   
-            lista_contadora_roja[indice_encontrado] = 1
+            #lista_result[indice_encontrado] = n   
+            #lista_contadora_roja[indice_encontrado] = 1
 
             pf += 1
 
         #Caso primero, cuando se llena la memoria
         if  es_diferente == True and contador2 < parametro_largo:
             lista_result.append(n)
-            lista_contadora_roja.append(1)
+            #lista_contadora_roja.append(1)
             contador2 += 1
             pf += 1
             
+
+        contador_parametros += 1
+
         #Imprimo corrida
 
-        print("Lista de contadores: ")
-        print(lista_contadora_roja)
-
+        #print("Lista de contadores: ")
+        #print(lista_contadora_roja)
+        
         print("Lista de resultado: ")
         print(lista_result)
 
@@ -347,7 +419,8 @@ def SecondChance(parametros_entrada, parametro_largo):
                         #Actualiza el second chance
                         if el_mas_viejo < k and \
                             lista_second_chance[contador2] == 1:
-                            print("Se salvo el que tiene second chance. Se actualiza a cero.")
+
+                            print("Se salvo el "+str(lista_resultado[contador2])+" que tiene second chance. Se actualiza a cero.")
                             lista_second_chance[contador2] = 0
 
                     contador2 += 1
@@ -557,36 +630,37 @@ def LFU(parametros_entrada, parametro_largo):
 
 ###############################################################################################################
 
+# print("############################################## MRU ############################################################")
+# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 MRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+# MRU([7,0,1,2,0,3,0,4,2,3,0,3,1,2,0,7,0,1], 3)
+# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo2 MRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+# MRU([1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6], 4)
 
-############################################## MRU ############################################################
-#Ejemplo1
-#MRU([7,0,1,2,0,3,0,4,2,3,0,3,1,2,0,7,0,1], 3)
-#Ejemplo2
-#MRU([1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6], 4)
+print("############################################# LRU #############################################################")
+print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 LRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+LRU([1,2,3,4,1,2,5,1,2,3,4,5], 4)
+print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo2 LRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+LRU([7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1], 3)
 
-############################################# LRU #############################################################
-#Ejemplo1
-#LRU([1,2,3,4,1,2,5,1,2,3,4,5], 4)
-#Ejemplo2 
-#LRU([7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1], 3)
+# print("############################################# FIFO ############################################################")
+# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 FIFO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+# FIFO([3,2,1,3,4,1,6,2,4,3,4,2,1,4,5,2,1,3,4], 3)
+# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 FIFO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+# FIFO([7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1], 3)
 
-############################################# FIFO ############################################################
-#Ejemplo1
-#FIFO([3,2,1,3,4,1,6,2,4,3,4,2,1,4,5,2,1,3,4], 3)
-#Ejemplo2
-#FIFO([7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1], 3)
+# print("######################################## Second chance ########################################################")
+# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 Second chance @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+# SecondChance([2,3,2,1,5,2,4,5,3,2,5,2], 3)
+# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 Second chance @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+# SecondChance([4,5,5,5,6,7,8,6,7,8,6,7,8,4,1,5,2,4,4,1], 4)
 
-######################################## Second chance ########################################################
-#Ejemplo1
-#SecondChance([2,3,2,1,5,2,4,5,3,2,5,2], 3)
-#Ejemplo2
-#SecondChance([4,5,5,5,6,7,8,6,7,8,6,7,8,4,1,5,2,4,4,1], 4)
+# print("############################################ LFU ##############################################################")
+# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 LFU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+# LFU([7,0,1,2,0,3,0,4,2,3,0,3,2,1,2], 3)
+# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 LFU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+# LFU([3,5,6,6,1,1,4,2,3,4], 3)
 
-############################################ LFU ##############################################################
-#Ejemplo1
-#LFU([7,0,1,2,0,3,0,4,2,3,0,3,2,1,2], 3)
-#Ejemplo2
-#LFU([3,5,6,6,1,1,4,2,3,4], 3)
+
 
 ###############################################################################################################
 
