@@ -320,146 +320,6 @@ def FIFO(parametros_entrada, parametro_largo):
         print("Total page hit:")
         print(ph)
 
-##########################################################################################################
-
-#
-def SecondChance(parametros_entrada, parametro_largo):
-    lista_resultado = []
-
-    contador_global = 0
-    lista_contadores = []
-    lista_second_chance = []
-    pf = 0
-    ph = 0
-
-    #Caso primero, se llena la lista de resultado
-    for n in parametros_entrada:
-        
-        print("\nPagina:")
-        print(n)
-
-        es_igual = False
-        es_vacia = False
-
-        #Caso cuando es vacia la lista
-        if lista_resultado == []:
-            lista_resultado.append(n)
-            es_vacia = True
-            lista_contadores.append(0)
-            lista_second_chance.append(0)
-            pf += 1
-
-        #Si el numero a insertar es igual entonces no se hace nada
-        if es_vacia == False:
-
-            contador3 = 0
-
-            for m in lista_resultado:
-                
-                if m == n:
-                    es_igual = True
-                    print("X")
-                    print("Hubo un second chance. Se actualiza a uno.")
-                    lista_second_chance[contador3] = 1
-                    ph += 1
-
-                contador3 += 1
-
-        #Caso en el que el numero es diferente.
-        if es_igual == False and \
-            es_vacia == False:
-
-            largo_lista = len(lista_resultado)
-
-            #Esta vacia alguna casilla?
-            if largo_lista < parametro_largo:
-                lista_resultado.append(n)
-                lista_contadores.append(0)
-                lista_second_chance.append(0)
-                pf += 1
-
-            else:
-
-                el_mas_viejo = 0
-                contador2 = 0
-                
-                #Revisa cual es la pagina mas vieja
-                for k in lista_contadores:
-
-                    #Caso cuando estan en el indice cero
-                    if contador2 == 0 and \
-                        lista_second_chance[contador2] == 0:
-                        el_mas_viejo = k
-                        contador_global = contador2
-                    else:
-                        #Compara para sacar el mas viejo
-                        #Para los que tengan second chance, los omite
-                        if el_mas_viejo < k and \
-                            lista_second_chance[contador2] == 0:
-                            el_mas_viejo = k
-                            contador_global = contador2
-                        
-                        #Actualiza el second chance
-                        if el_mas_viejo < k and \
-                            lista_second_chance[contador2] == 1:
-
-                            print("Se salvo el "+str(lista_resultado[contador2])+" que tiene second chance. Se actualiza a cero.")
-                            lista_second_chance[contador2] = 0
-
-                    contador2 += 1
-
-                lista_resultado[contador_global] = n
-                lista_contadores[contador_global] = 0
-                pf += 1
-
-
-            #Coloco el indice global en el campo correspondiente
-            if contador_global < parametro_largo-1:
-                contador_global += 1
-            else:
-                contador_global = 0
-
-        largo_lista_contadores = len(lista_contadores)
-
-        #Aumenta contadores en general
-        for j in range(0,largo_lista_contadores):
-            numero = lista_contadores[j]
-            lista_contadores[j] = numero + 1
-
-        #Obtengo primera pagina en entrar
-        indice = 0
-        contador3 = 0
-        mayor = -1
-
-        for o in lista_contadores:
-
-            if mayor < o:
-                mayor = o
-                indice = contador3
-            
-            contador3 += 1
-        
-        primera_pagina = lista_resultado[indice]
-
-        #Imprimo resultado
-        print("Lista second chance:")
-        print(lista_second_chance)
-
-        print("Lista de paginas mas antiguas:")
-        print(lista_contadores)
-
-        print("Primera pagina en entrar:")
-        print(primera_pagina)
-
-        print("Lista de resultado:")
-        print(lista_resultado)
-
-        print("Total page fault:")
-        print(pf)
-
-        print("Total page hit:")
-        print(ph)
-
 ##############################################################################################################
 
 #Algoritmo de remplazo de la frecuencia menos usada
@@ -626,15 +486,140 @@ def LFU(parametros_entrada, parametro_largo):
 
 ###############################################################################################################
 
+def SecondChance(parametros_entrada, parametro_largo):
+    lista_resultado = []
+
+    pointer = 0
+    
+    lista_second_chance = []
+
+    contador1 = 0
+
+    #Caso primero, se llena la lista de resultado
+    for n in parametros_entrada:
+
+        print("\nPagina:")
+        print(n)
+
+        es_vacia = False
+
+        #Caso base, cuando la lista es vacia
+        if lista_resultado == []:
+
+            lista_resultado.append(n)
+            lista_second_chance.append(1)
+
+            es_vacia = True
+            contador1 += 1
+
+            #Actualizo pointer
+            pointer = 1
+
+        es_diferente = True
+
+        #Caso cuando es igual el numero
+        if es_vacia == False:
+
+            contador = 0
+
+            for m in lista_resultado:
+
+                if m == n:
+
+                    lista_second_chance[contador] = 1
+                    print("Second Chance! En la pagina:")
+                    print(m)
+
+                    es_diferente = False
+
+                contador += 1
+
+        bandera_caso = False
+
+        #Caso cuando hay casillas:
+        if es_vacia == False and \
+            len(lista_resultado) < parametro_largo and \
+            es_diferente == True:
+
+            lista_resultado.append(n)
+            lista_second_chance.append(1)
+
+            contador1 += 1
+
+            if pointer+1 == parametro_largo:
+                #Sigue el movimiento de las fechas del reloj.
+                pointer = 0
+                
+            else:
+                #Actualizo pointer
+                pointer += 1
+
+            bandera_caso = True
+
+        #Caso cuando no hay casillas
+        if es_vacia == False and \
+            len(lista_resultado) == parametro_largo and \
+            es_diferente == True and \
+            bandera_caso == False:
+
+            encontro_donde_insertar = False
+
+            while(encontro_donde_insertar == False):
+
+                #Verifico que si hay o no un second chance
+                if lista_second_chance[pointer] == 1:
+
+                    #Utilizo su second chance
+                    lista_second_chance[pointer] = 0
+                
+                    if pointer+1 == parametro_largo:
+                        #Sigue el movimiento de las fechas del reloj.
+                        pointer = 0
+                        
+                    else:
+                        #Actualizo pointer
+                        pointer += 1
+
+                else:
+
+                    #Se insertar con las fechas del relog, donde debe ir
+                    lista_resultado[pointer] = n
+
+                    #Se actualiza el second chance a 1
+                    lista_second_chance[pointer] = 1
+
+                    #Sale del ciclo
+                    encontro_donde_insertar = True
+
+                    if pointer+1 == parametro_largo:
+                        #Sigue el movimiento de las fechas del reloj.
+                        pointer = 0
+                        
+                    else:
+                        #Actualizo pointer
+                        pointer += 1
+        
+        print("Pointer:")
+        print(pointer)
+
+        print("Lista de second chance:")
+        print(lista_second_chance)
+
+        print("Lista de resultados:")
+        print(lista_resultado)      
+
+###############################################################################################################
+
+
 #                                           Pruebas
 
 ###############################################################################################################
 
-print("############################################## MRU ############################################################")
-print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 MRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-MRU([7,0,1,2,0,3,0,4,2,3,0,3,1,2,0,7,0,1], 3)
-print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo2 MRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-MRU([1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6], 4)
+#print("############################################## MRU ############################################################")
+# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 MRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+# MRU([7,3,1,5,3,3,3,4,5,3,3,3,1,5,3,7,3,1], 4)
+# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo2 MRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+#MRU([1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6], 4)
 
 # print("############################################# LRU #############################################################")
 # print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 LRU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
@@ -648,11 +633,11 @@ MRU([1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6,1,2,3,4,5,6], 4)
 # print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 FIFO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 # FIFO([7,0,1,2,0,3,0,4,2,3,0,3,2,1,2,0,1,7,0,1], 3)
 
-# print("######################################## Second chance ########################################################")
-# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 Second chance @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-# SecondChance([2,3,2,1,5,2,4,5,3,2,5,2], 3)
-# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 Second chance @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-# SecondChance([4,5,5,5,6,7,8,6,7,8,6,7,8,4,1,5,2,4,4,1], 4)
+print("######################################## Second chance ########################################################")
+print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 Second chance @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+#SecondChance([2,1,5,2,4,5,3,2,5,3],3)
+print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo2 Second chance @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+SecondChance([2,1,6,5,4,6,3,5,6,3,2,1,3,6], 4)
 
 # print("############################################ LFU ##############################################################")
 # print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Ejemplo1 LFU @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
